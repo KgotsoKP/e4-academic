@@ -9,7 +9,6 @@ var builder = WebApplication.CreateBuilder(args);
     builder.Services.AddSwaggerGen();
 }
 
-
 var app = builder.Build();
 {
     if (app.Environment.IsDevelopment())
@@ -21,6 +20,7 @@ var app = builder.Build();
         app.MapScalarApiReference();
     }
 
+    app.UseExceptionHandler("/error");
     app.UseHttpsRedirection();
     app.MapControllers();  
     app.Run();

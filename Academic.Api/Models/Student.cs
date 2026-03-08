@@ -1,6 +1,5 @@
 ﻿namespace Academic.Api.Models;
 
-// use a constructor to set the values.
 public class Student
 {
     public Student(Guid id, string studentNumber, string firstName, string lastName, DateTime lastModifiedDateTime, List<string> extracurricularActivities, List<string> courses)

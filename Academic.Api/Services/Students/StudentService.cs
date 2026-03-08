@@ -1,30 +1,51 @@
 ﻿using Academic.Api.Models;
-using Academic.Contracts;
+using Academic.Api.ServiceErrors;
+using ErrorOr;
 
 namespace Academic.Api.Services.Students;
 
-// Use EF core and Repository
 public class StudentService : IStudentService
 {
     private static readonly Dictionary<Guid, Student> _students = new ();
     
-    public void CreateStudent(Student student)
+    public ErrorOr<Created> CreateStudent(Student student)
     {
         _students.Add(student.Id, student);
+
+        return Result.Created;
     }
 
-    public Student GetStudent(Guid id)
+    public ErrorOr<Student> GetStudent(Guid id)
     {
-        return _students[id];
+        if (_students.TryGetValue(id, out var student))
+        {
+            return student;
+        };
+
+        return Errors.Student.NotFound;
     }
 
-    public void UpdateStudent(Student student, Guid id)
+    public ErrorOr<Updated> UpdateStudent(Student student, Guid id)
     {
+        if (!_students.ContainsKey(id))
+        {
+            return Errors.Student.NotFound;
+        }
+        
         _students[id] = student;
+        
+        return Result.Updated;
     }
 
-    public void DeleteStudent(Guid id)
+    public ErrorOr<Deleted> DeleteStudent(Guid id)
     {
+        if (!_students.ContainsKey(id))
+        {
+            return Errors.Student.NotFound;
+        }
+        
         _students.Remove(id);
+        
+        return Result.Deleted;
     }
 }

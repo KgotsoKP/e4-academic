@@ -3,12 +3,11 @@ using Academic.Api.Models;
 using Academic.Api.Services.Students;
 using Academic.Contracts;
 using Microsoft.AspNetCore.Mvc;
+using ErrorOr;
 
 namespace Academic.Api.Controllers;
 
-[ApiController]
-[Route("[controller]")]
-public class StudentsController : ControllerBase
+public class StudentsController : ApiController
 {
     private readonly IStudentService _studentService;
 
@@ -30,53 +29,33 @@ public class StudentsController : ControllerBase
             request.Courses
         );
 
-        _studentService.CreateStudent(student);
-
-        var response = new StudentResponse(
-            student.Id,
-            student.StudentNumber,
-            student.FirstName,
-            student.LastName,
-            student.LastModifiedDateTime,
-            student.ExtracurricularActivities,
-            student.Courses
-        );
-
+        ErrorOr<Created> createStudentResult =  _studentService.CreateStudent(student);
+        
+        if (createStudentResult.IsError)
+        {
+            return Problem(createStudentResult.Errors);
+        }
+        
         return CreatedAtAction(
             actionName: nameof(GetStudent),
             routeValues: new { id = student.Id },
-            value : response
+            value : MapStudentResponse(student)
         );
     }
     
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetStudent(Guid id)
     {
-        Student student = _studentService.GetStudent(id);
+        ErrorOr<Student> getStudentResult = _studentService.GetStudent(id);
         
-        var response = new StudentResponse(
-            student.Id,
-            student.StudentNumber,
-            student.FirstName,
-            student.LastName,
-            student.LastModifiedDateTime,
-            student.ExtracurricularActivities,
-            student.Courses
-        );
-        
-        return Ok(response);
+        return getStudentResult.Match(
+            student => Ok(MapStudentResponse(student)),
+            errors => Problem(errors));
     }
     
     [HttpPut("{id:guid}")]
     public async Task<IActionResult> UpdateStudent([FromBody] UpdateStudentRequest request, Guid id)
     {
-        var student = _studentService.GetStudent(id);
-
-        if (student == null)
-        {
-            return NotFound();
-        }
-
         var req = new Student(
             id,
             request.StudentNumber,
@@ -86,23 +65,35 @@ public class StudentsController : ControllerBase
             request.ExtracurricularActivities,
             request.Courses
         );
-
-        _studentService.UpdateStudent(req, id);
         
-        return NoContent();
+        ErrorOr<Updated> updateStudentResult = _studentService.UpdateStudent(req, id);
+        
+        return updateStudentResult.Match(
+            updated =>  NoContent(),
+            errors => Problem(errors));
     }
     
     [HttpDelete("{id:guid}")]
     public async Task<IActionResult> DeleteStudent(Guid id)
     {
-        var student = _studentService.GetStudent(id);
-
-        if (student == null)
-        {
-            return NotFound();
-        }
         
-        _studentService.DeleteStudent(id);
-        return NoContent();
+        ErrorOr<Deleted> deleteStudentResult = _studentService.DeleteStudent(id);
+        
+        return deleteStudentResult.Match(
+            deleted => NoContent(),
+            errors => Problem(errors));
+    }
+    
+    private static StudentResponse MapStudentResponse(Student student)
+    {
+        return new StudentResponse(
+            student.Id,
+            student.StudentNumber,
+            student.FirstName,
+            student.LastName,
+            student.LastModifiedDateTime,
+            student.ExtracurricularActivities,
+            student.Courses
+        );
     }
 }

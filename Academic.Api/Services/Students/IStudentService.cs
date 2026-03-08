@@ -1,12 +1,12 @@
 ﻿using Academic.Api.Models;
-using Academic.Contracts;
+using ErrorOr;
 
 namespace Academic.Api.Services.Students;
 
 public interface IStudentService
 {
-    void CreateStudent(Student student);
-    Student GetStudent(Guid id);
-    void UpdateStudent(Student student, Guid id);
-    void DeleteStudent(Guid id);
+    ErrorOr<Created> CreateStudent(Student student);
+    ErrorOr<Student> GetStudent(Guid id);
+    ErrorOr<Updated> UpdateStudent(Student student, Guid id);
+    ErrorOr<Deleted> DeleteStudent(Guid id);
 }
