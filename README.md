@@ -5,22 +5,25 @@
 ![ASP.NET Web API](https://img.shields.io/badge/ASP.NET%20Web%20API-512BD4?style=for-the-badge&logo=dotnet&logoColor=white)
 ![Swagger](https://img.shields.io/badge/Swagger-85EA2D?style=for-the-badge&logo=swagger&logoColor=black)
 ![JSON](https://img.shields.io/badge/JSON-000000?style=for-the-badge&logo=json&logoColor=white)
+![Time Taken](https://img.shields.io/badge/Time%20Taken-~5%20hours-blue?style=for-the-badge&logo=clockify&logoColor=white)
 
 Test 3 : A C# REST API service that uses the GET , POST and DELETE verbs . the Api saves Simple Student Data. Retrieve
 and Delete Student Data.
 
 ## Demo
 
+![e4-academic-demo](https://github.com/user-attachments/assets/75d21183-cdeb-4b8f-a920-4ff9763eb62f)
+
 ## API Endpoints
 
 | Method   | Endpoint             | Description              |
 |----------|----------------------|--------------------------|
-| `GET`    | `/api/students`      | Retrieve all students    |
-| `GET`    | `/api/students/{id}` | Retrieve a student by ID |
-| `POST`   | `/api/students`      | Add a new student        |
-| `DELETE` | `/api/students/{id}` | Delete a student by ID   |
+| `GET`    | `/Students`      | Retrieve all students    |
+| `GET`    | `/Students/{id}` | Retrieve a student by ID |
+| `POST`   | `/Students`      | Add a new student        |
+| `DELETE` | `/Students/{id}` | Delete a student by ID   |
 
-For full request/response examples and schemas, see the [API Documentation](Docs/api).
+For full request/response examples and schemas, see the [API Definition](Docs/Api.md).
 
 ## Assumptions & Business Rules
 
@@ -72,14 +75,14 @@ purposes.
 1. **Clone the repository**
 
 ```bash
-   git clone https://github.com/yourusername/your-repo-name.git
-   cd your-repo-name
+   git clone https://github.com/KgotsoKP/e4-academic.git
+   cd e4-academic
 ```
 
 2 **Run the application**
 
 ```bash
-   dotnet run --project src/Acedemic.Api
+   dotnet run --project ./Academic.Api
 ```
 
 > Note: `dotnet restore` runs implicitly with `dotnet run` in .NET 8.
