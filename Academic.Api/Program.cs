@@ -13,15 +13,12 @@ var app = builder.Build();
 {
     if (app.Environment.IsDevelopment())
     {
-        app.UseSwagger(options =>
-        {
-            options.RouteTemplate = "/openapi/{documentName}.json";
-        });
-        app.MapScalarApiReference();
+        app.UseSwagger();
+        app.UseSwaggerUI();
     }
 
     app.UseExceptionHandler("/error");
     app.UseHttpsRedirection();
-    app.MapControllers();  
+    app.MapControllers();
     app.Run();
 }

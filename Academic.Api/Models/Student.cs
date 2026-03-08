@@ -2,7 +2,8 @@
 
 public class Student
 {
-    public Student(Guid id, string studentNumber, string firstName, string lastName, DateTime lastModifiedDateTime, List<string> extracurricularActivities, List<string> courses)
+    public Student(Guid id, string studentNumber, string firstName, string lastName, DateTime lastModifiedDateTime,
+        List<string> extracurricularActivities, List<string> courses)
     {
         Id = id;
         StudentNumber = studentNumber;
@@ -17,7 +18,7 @@ public class Student
     public string StudentNumber { get; }
     public string FirstName { get; }
     public string LastName { get; }
-    public DateTime LastModifiedDateTime { get;}
+    public DateTime LastModifiedDateTime { get; }
     public List<string> ExtracurricularActivities { get; }
-    public List<string> Courses { get;}
+    public List<string> Courses { get; }
 }

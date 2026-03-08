@@ -7,4 +7,4 @@ public record UpdateStudentRequest(
     DateTime LastModifiedDateTime,
     List<string> ExtracurricularActivities,
     List<string> Courses
-    );
+);

@@ -7,6 +7,7 @@ public interface IStudentService
 {
     ErrorOr<Created> CreateStudent(Student student);
     ErrorOr<Student> GetStudent(Guid id);
+    ErrorOr<IEnumerable<Student>> GetStudents();
     ErrorOr<Updated> UpdateStudent(Student student, Guid id);
     ErrorOr<Deleted> DeleteStudent(Guid id);
 }

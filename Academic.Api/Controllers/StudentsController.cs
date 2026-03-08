@@ -17,7 +17,7 @@ public class StudentsController : ApiController
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateStudent(CreateStudentRequest request)
+    public IActionResult CreateStudent(CreateStudentRequest request)
     {
         var student = new Student(
             Guid.NewGuid(),
@@ -29,32 +29,42 @@ public class StudentsController : ApiController
             request.Courses
         );
 
-        ErrorOr<Created> createStudentResult =  _studentService.CreateStudent(student);
-        
+        ErrorOr<Created> createStudentResult = _studentService.CreateStudent(student);
+
         if (createStudentResult.IsError)
         {
             return Problem(createStudentResult.Errors);
         }
-        
+
         return CreatedAtAction(
             actionName: nameof(GetStudent),
             routeValues: new { id = student.Id },
-            value : MapStudentResponse(student)
+            value: MapStudentResponse(student)
         );
     }
-    
+
     [HttpGet("{id:guid}")]
-    public async Task<IActionResult> GetStudent(Guid id)
+    public IActionResult GetStudent(Guid id)
     {
         ErrorOr<Student> getStudentResult = _studentService.GetStudent(id);
-        
+
         return getStudentResult.Match(
             student => Ok(MapStudentResponse(student)),
             errors => Problem(errors));
     }
     
+    [HttpGet]
+    public IActionResult GetStudents()
+    {
+        ErrorOr<IEnumerable<Student>> getStudentResult = _studentService.GetStudents();
+
+        return getStudentResult.Match(
+            students => Ok(students.Select(MapStudentResponse)),
+            errors => Problem(errors));
+    }
+
     [HttpPut("{id:guid}")]
-    public async Task<IActionResult> UpdateStudent([FromBody] UpdateStudentRequest request, Guid id)
+    public IActionResult UpdateStudent([FromBody] UpdateStudentRequest request, Guid id)
     {
         var req = new Student(
             id,
@@ -65,25 +75,26 @@ public class StudentsController : ApiController
             request.ExtracurricularActivities,
             request.Courses
         );
-        
+
         ErrorOr<Updated> updateStudentResult = _studentService.UpdateStudent(req, id);
-        
+
         return updateStudentResult.Match(
-            updated =>  NoContent(),
+            updated => NoContent(),
             errors => Problem(errors));
     }
-    
+
     [HttpDelete("{id:guid}")]
-    public async Task<IActionResult> DeleteStudent(Guid id)
+    public IActionResult DeleteStudent(Guid id)
     {
-        
         ErrorOr<Deleted> deleteStudentResult = _studentService.DeleteStudent(id);
-        
+
         return deleteStudentResult.Match(
             deleted => NoContent(),
             errors => Problem(errors));
     }
-    
+
+    // Managble at this scale as there are minial transfomations. We could
+    // use Automapper as the application grows
     private static StudentResponse MapStudentResponse(Student student)
     {
         return new StudentResponse(

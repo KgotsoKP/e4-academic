@@ -8,4 +8,4 @@ public record StudentResponse(
     DateTime LastModifiedDateTime,
     List<string> ExtracurricularActivities,
     List<string> Courses
-    );
+);

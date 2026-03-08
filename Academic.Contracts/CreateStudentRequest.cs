@@ -5,4 +5,4 @@ public record CreateStudentRequest(
     string LastName,
     List<string> ExtracurricularActivities,
     List<string> Courses
-    );
+);
